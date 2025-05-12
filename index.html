@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Boo - Sistema de Gestão Demo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f5f5;
+    }
+    .sidebar {
+      background: linear-gradient(to bottom, #991b1b, #dc2626);
+      min-height: 100vh;
+    }
+    .kanban-column {
+      min-height: 500px;
+      background-color: #fff;
+      border: 1px solid #e5e7eb;
+    }
+    .kanban-card {
+      cursor: move;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kanban-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .client-bg {
+      background: url('https://images.unsplash.com/photo-1513104890138-7c749659a584?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+      background-attachment: fixed;
+    }
+    .pizza-card img {
+      transition: transform 0.3s;
+    }
+    .pizza-card:hover img {
+      transform: scale(1.05);
+    }
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <div class="d-flex">
+    <div class="sidebar text-white w-64 p-4">
+      <h1 class="text-2xl font-bold mb-6">Pizza Boo</h1>
+      <ul class="space-y-4">
+        <li><a href="#kanban" class="text-white hover:text-gray-200">Gestão de Pedidos</a></li>
+        <li><a href="#client" class="text-white hover:text-gray-200">App Cliente</a></li>
+        <li><a href="#motoboy" class="text-white hover:text-gray-200">App Motoboy</a></li>
+        <li><a href="#crm" class="text-white hover:text-gray-200">CRM</a></li>
+      </ul>
+    </div>
+    <div class="flex-1">
+      <!-- Kanban Board Section -->
+      <section id="kanban" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center text-red-600 mb-12" data-aos="fade-up">Gestão de Pedidos</h2>
+          <div class="row g-4">
+            <div class="col-md-3">
+              <div class="kanban-column p-4 rounded-lg shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Recebido</h3>
+                <div class="kanban-card bg-white p-4 mb-3 rounded shadow-sm" draggable="true" data-id="1">
+                  <p><strong>Pedido #101</strong></p>
+                  <p>Pizza Margherita (G)</p>
+                  <p>Cliente: João Silva</p>
+                  <button class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="showOrderDetails(101)">Detalhes</button>
+                </div>
+                <div class="kanban-card bg-white p-4 mb-3 rounded shadow-sm" draggable="true" data-id="2">
+                  <p><strong>Pedido #102</strong></p>
+                  <p>Pizza Calabresa (M)</p>
+                  <p>Cliente: Maria Oliveira</p>
+                  <button class="btn btn-sm btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="showOrderDetails(102)">Detalhes</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="kanban-column p-4 rounded-lg shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Em Preparo</h3>
+                <!-- Empty initially -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="kanban-column p-4 rounded-lg shadow-sm" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Finalizado</h3>
+                <!-- Empty initially -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="kanban-column p-4 rounded-lg shadow-sm" data-aos="fade-up" data-aos-delay="400">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Saiu para Entrega</h3>
+                <!-- Empty initially -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Client App Section -->
+      <section id="client" class="py-16 client-bg text-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">App do Cliente</h2>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="bg-white text-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-semibold mb-4">Cardápio</h3>
+                <div class="row g-3">
+                  <div class="col-6 pizza-card" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1594007654729-407eedc4be65?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" class="img-fluid rounded mb-2" alt="Margherita">
+                    <p><strong>Margherita (G)</strong> - R$ 45,00</p>
+                    <button class="btn btn-sm btn-danger w-100" onclick="addToCart('Margherita (G)', 45)">Adicionar</button>
+                  </div>
+                  <div class="col-6 pizza-card" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" class="img-fluid rounded mb-2" alt="Calabresa">
+                    <p><strong>Calabresa (M)</strong> - R$ 35,00</p>
+                    <button class="btn btn-sm btn-danger w-100" onclick="addToCart('Calabresa (M)', 35)">Adicionar</button>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <h4>Carrinho</h4>
+                  <ul id="cart" class="list-group">
+                    <!-- Cart items will appear here -->
+                  </ul>
+                  <button class="btn btn-danger w-100 mt-3" onclick="placeOrder()">Finalizar Pedido</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bg-white text-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-semibold mb-4">Acompanhar Pedido</h3>
+                <div class="progress mb-4">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Em Preparo</div>
+                </div>
+                <p><strong>Pedido #101</strong></p>
+                <p>Estimativa: 20 minutos</p>
+                <p>Endereço: Rua das Flores, 123</p>
+                <div id="mock-map" class="bg-gray-200 h-48 rounded mt-4" style="background: url('https://via.placeholder.com/600x200?text=Mapa+Rastreamento') no-repeat center/cover;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Motoboy App Section -->
+      <section id="motoboy" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center text-green-600 mb-12" data-aos="fade-up">App do Motoboy</h2>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-semibold mb-4">Entregas Atribuídas</h3>
+                <div class="border p-3 mb-3 rounded">
+                  <p><strong>Pedido #101</strong></p>
+                  <p>Endereço: Rua das Flores, 123</p>
+                  <p>Cliente: João Silva</p>
+                  <button class="btn btn-success w-100 mt-2" onclick="markDelivered(101)">Marcar como Entregue</button>
+                </div>
+                <div class="border p-3 rounded">
+                  <p><strong>Pedido #102</strong></p>
+                  <p>Endereço: Av. Central, 456</p>
+                  <p>Cliente: Maria Oliveira</p>
+                  <button class="btn btn-success w-100 mt-2" onclick="markDelivered(102)">Marcar como Entregue</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-semibold mb-4">Rota Atual</h3>
+                <div class="bg-gray-200 h-48 rounded mb-4" style="background: url('https://via.placeholder.com/600x200?text=Mapa+Rota') no-repeat center/cover;"></div>
+                <p><strong>Próxima Entrega:</strong> Rua das Flores, 123</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CRM Preview Section -->
+      <section id="crm" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center text-red-600 mb-12" data-aos="fade-up">CRM e Fidelização</h2>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="bg-gray-100 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-semibold mb-4">Perfil do Cliente</h3>
+                <p><strong>Nome:</strong> João Silva</p>
+                <p><strong>Telefone:</strong> (11) 98765-4321</p>
+                <p><strong>Endereço:</strong> Rua das Flores, 123</p>
+                <p><strong>Pontos de Fidelidade:</strong> 150</p>
+                <p><strong>Último Pedido:</strong> Pizza Margherita (G) - 10/05/2025</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bg-gray-100 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-semibold mb-4">Campanhas</h3>
+                <p><strong>Promoção Ativa:</strong> 20% OFF na próxima pizza</p>
+                <p><strong>Enviada via:</strong> WhatsApp, E-mail</p>
+                <p><strong>Data:</strong> 12/05/2025</p>
+                <button class="btn btn-danger w-100 mt-3">Enviar Nova Campanha</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="orderModalLabel">Detalhes do Pedido</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="modal-order-id"></p>
+          <p id="modal-order-items"></p>
+          <p id="modal-order-client"></p>
+          <p id="modal-order-address"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container">
+    <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Notificação</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Pedido adicionado ao carrinho!
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Interactivity -->
+  <script>
+    // Initialize AOS
+    AOS.init({ duration: 1200 });
+
+    // Mock Data
+    const orders = {
+      101: { id: 101, items: 'Pizza Margherita (G)', client: 'João Silva', address: 'Rua das Flores, 123' },
+      102: { id: 102, items: 'Pizza Calabresa (M)', client: 'Maria Oliveira', address: 'Av. Central, 456' }
+    };
+
+    // Kanban Drag-and-Drop
+    const cards = document.querySelectorAll('.kanban-card');
+    const columns = document.querySelectorAll('.kanban-column');
+
+    cards.forEach(card => {
+      card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', card.dataset.id);
+        card.classList.add('opacity-50');
+      });
+      card.addEventListener('dragend', () => {
+        card.classList.remove('opacity-50');
+      });
+    });
+
+    columns.forEach(column => {
+      column.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      column.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const card = document.querySelector(`[data-id="${id}"]`);
+        column.appendChild(card);
+      });
+    });
+
+    // Show Order Details in Modal
+    function showOrderDetails(orderId) {
+      const order = orders[orderId];
+      document.getElementById('modal-order-id').textContent = `Pedido #${order.id}`;
+      document.getElementById('modal-order-items').textContent = `Itens: ${order.items}`;
+      document.getElementById('modal-order-client').textContent = `Cliente: ${order.client}`;
+      document.getElementById('modal-order-address').textContent = `Endereço: ${order.address}`;
+    }
+
+    // Cart System
+    let cart = [];
+    function addToCart(item, price) {
+      cart.push({ item, price });
+      updateCart();
+      showToast(`Adicionou ${item} ao carrinho!`);
+    }
+
+    function updateCart() {
+      const cartList = document.getElementById('cart');
+      cartList.innerHTML = '';
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between';
+        li.innerHTML = `${item.item} <span>R$ ${item.price.toFixed(2)}</span>`;
+        cartList.appendChild(li);
+      });
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) {
+        showToast('Carrinho vazio!', 'bg-warning');
+        return;
+      }
+      showToast('Pedido finalizado com sucesso!', 'bg-success');
+      cart = [];
+      updateCart();
+    }
+
+    // Mark Delivery as Completed
+    function markDelivered(orderId) {
+      showToast(`Pedido #${orderId} marcado como entregue!`, 'bg-success');
+    }
+
+    // Show Toast Notification
+    function showToast(message, bgClass = 'bg-success') {
+      const toastEl = document.getElementById('orderToast');
+      toastEl.querySelector('.toast-body').textContent = message;
+      toastEl.classList.remove('bg-success', 'bg-warning');
+      toastEl.classList.add(bgClass);
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+  </script>
+</body>
+</html>
